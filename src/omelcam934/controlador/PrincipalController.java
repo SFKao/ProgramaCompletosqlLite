@@ -54,8 +54,8 @@ public class PrincipalController implements MouseListener, ActionListener {
                     VisitaController visitaController = new VisitaController(visitasBBDD.listarVisita((Integer) table.getValueAt(columna,0)));
                     VisitaVista visitaVista = new VisitaVista();
                     visitaVista.iniciar(this.vista.getFrame(),visitaController );
-
                 }
+                vista.llenarTabla();
             }
         }
 
@@ -68,10 +68,12 @@ public class PrincipalController implements MouseListener, ActionListener {
             AnyadirMonitorController anyadirMonitorController = new AnyadirMonitorController();
             AnyadirMonitorVista anyadirMonitorVista = new AnyadirMonitorVista();
             anyadirMonitorVista.iniciar(vista.getFrame(),anyadirMonitorController);
+            vista.llenarTabla();
         }else if(e.getSource() == vista.getCrearVisita()){
             AnyadirVisitaController anyadirVisitaController = new AnyadirVisitaController();
             AnyadirVisitaView anyadirVisitaView = new AnyadirVisitaView();
             anyadirVisitaView.iniciar(vista.getFrame(),anyadirVisitaController);
+            vista.llenarTabla();
         }
     }
 
@@ -120,6 +122,9 @@ public class PrincipalController implements MouseListener, ActionListener {
     }
 
     public void llenarTabla(DefaultTableModel monitores, DefaultTableModel visitas){
+        this.visitas = new ArrayList<>();
+        this.monitors = new ArrayList<>();
+
         this.visitas.addAll(visitasBBDD.listarVisitas());
         this.monitors.addAll(monitorBBDD.listarMonitores());
 

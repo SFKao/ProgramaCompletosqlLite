@@ -97,6 +97,7 @@ public class VisitaController implements ActionListener {
             VincularVisitaMonitorController vincularVisitaMonitorController = new VincularVisitaMonitorController(visita);
             VincularVisitaMonitorVista vincularVisitaMonitorVista = new VincularVisitaMonitorVista();
             vincularVisitaMonitorVista.iniciar(vista.getFrame(), vincularVisitaMonitorController);
+            llenarDatos();
 
 
         }
