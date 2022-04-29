@@ -25,9 +25,16 @@ public class PrincipalController implements MouseListener, ActionListener {
     private ArrayList<Monitor> monitors;
     private ArrayList<Visita> visitas;
 
+    private boolean admin;
+
     public PrincipalController(Principal vista) {
         this();
         this.vista = vista;
+    }
+
+    public PrincipalController(boolean admin) {
+        this();
+        this.admin = admin;
     }
 
     public PrincipalController() {
@@ -39,6 +46,10 @@ public class PrincipalController implements MouseListener, ActionListener {
 
     }
 
+    public boolean isAdmin() {
+        return admin;
+    }
+
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
 
@@ -47,11 +58,11 @@ public class PrincipalController implements MouseListener, ActionListener {
                 JTable table = (JTable) mouseEvent.getSource();
                 int columna = table.getSelectedRow();
                 if(table == vista.getMonitorTable()){
-                    MonitorController monitorController = new MonitorController(monitorBBDD.listarMonitor((Integer) table.getValueAt(columna,0)));
+                    MonitorController monitorController = new MonitorController(monitorBBDD.listarMonitor((Integer) table.getValueAt(columna,0)),admin);
                     MonitorVista monitorVista = new MonitorVista();
                     monitorVista.iniciar(this.vista.getFrame(),monitorController);
                 }else if(table == vista.getVisitaTable()){
-                    VisitaController visitaController = new VisitaController(visitasBBDD.listarVisita((Integer) table.getValueAt(columna,0)));
+                    VisitaController visitaController = new VisitaController(visitasBBDD.listarVisita((Integer) table.getValueAt(columna,0)),admin);
                     VisitaVista visitaVista = new VisitaVista();
                     visitaVista.iniciar(this.vista.getFrame(),visitaController );
                 }
@@ -70,10 +81,14 @@ public class PrincipalController implements MouseListener, ActionListener {
             anyadirMonitorVista.iniciar(vista.getFrame(),anyadirMonitorController);
             vista.llenarTabla();
         }else if(e.getSource() == vista.getCrearVisita()){
-            AnyadirVisitaController anyadirVisitaController = new AnyadirVisitaController();
-            AnyadirVisitaView anyadirVisitaView = new AnyadirVisitaView();
-            anyadirVisitaView.iniciar(vista.getFrame(),anyadirVisitaController);
-            vista.llenarTabla();
+            if(monitors!=null) {
+                AnyadirVisitaController anyadirVisitaController = new AnyadirVisitaController();
+                AnyadirVisitaView anyadirVisitaView = new AnyadirVisitaView();
+                anyadirVisitaView.iniciar(vista.getFrame(), anyadirVisitaController);
+                vista.llenarTabla();
+            }else{
+                JOptionPane.showMessageDialog(vista.getFrame(), "Se necesita un monitor minimo antes de poder crear una visita");
+            }
         }
     }
 
@@ -122,28 +137,26 @@ public class PrincipalController implements MouseListener, ActionListener {
     }
 
     public void llenarTabla(DefaultTableModel monitores, DefaultTableModel visitas){
-        this.visitas = new ArrayList<>();
-        this.monitors = new ArrayList<>();
+        this.visitas = visitasBBDD.listarVisitas();
+        this.monitors = monitorBBDD.listarMonitores();
 
-        this.visitas.addAll(visitasBBDD.listarVisitas());
-        this.monitors.addAll(monitorBBDD.listarMonitores());
-
-        for (Visita v: this.visitas) {
-            Object[] aux = new Object[4];
-            aux[0] = v.getId();
-            aux[1] = v.getFecha();
-            aux[2] = v.getDuracion();
-            aux[3] = v.getNumero_sala();
-            visitas.addRow(aux);
-        }
-
-        for(Monitor m: this.monitors){
-            Object aux[] = new Object[4];
-            aux[0] = m.getId();
-            aux[1] = m.getDni();
-            aux[2] = m.getNombre();
-            aux[3] = m.getApellidos();
-            monitores.addRow(aux);
-        }
+        if(this.visitas!=null)
+            for (Visita v: this.visitas) {
+                Object[] aux = new Object[4];
+                aux[0] = v.getId();
+                aux[1] = v.getFecha();
+                aux[2] = v.getDuracion();
+                aux[3] = v.getNumero_sala();
+                visitas.addRow(aux);
+            }
+        if(this.monitors!=null)
+            for(Monitor m: this.monitors){
+                Object aux[] = new Object[4];
+                aux[0] = m.getId();
+                aux[1] = m.getDni();
+                aux[2] = m.getNombre();
+                aux[3] = m.getApellidos();
+                monitores.addRow(aux);
+            }
     }
 }

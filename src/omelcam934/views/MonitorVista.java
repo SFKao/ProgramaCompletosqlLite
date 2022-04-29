@@ -45,6 +45,11 @@ public class MonitorVista {
         llenarTabla();
         colocarEscucha();
         llenarDatos();
+
+        if(!controller.isAdmin()){
+            editarBox.setVisible(false);
+        }
+
         frame.pack();
         frame.setVisible(true);
     }

@@ -30,8 +30,15 @@ public class Principal {
         llenarTabla();
         colocarEscucha();
         frame.pack();
+        if(!controller.isAdmin()){
+            crearMonitor.setEnabled(false);
+            crearVisita.setEnabled(false);
+        }
+
         frame.setVisible(true);
     }
+
+
 
     public void llenarTabla(){
         String [] aux = {"Id", "fecha", "duracion", "sala"};

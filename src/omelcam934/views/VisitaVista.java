@@ -49,6 +49,11 @@ public class VisitaVista {
         colocarEscucha();
         llenarDatos();
         frame.pack();
+
+        if(!controller.isAdmin()){
+            editarBox.setVisible(false);
+        }
+
         frame.setVisible(true);
     }
 

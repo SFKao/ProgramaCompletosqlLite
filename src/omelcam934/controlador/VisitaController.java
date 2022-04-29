@@ -16,10 +16,23 @@ public class VisitaController implements ActionListener {
 
     private VisitaVista vista;
 
+    private boolean admin;
+
     public VisitaController(Visita visita, VisitaVista vista) {
         this();
         this.visita = visita;
         this.vista = vista;
+    }
+
+    public VisitaController(Visita visita, VisitaVista vista, boolean admin) {
+        this.visita = visita;
+        this.vista = vista;
+        this.admin = admin;
+    }
+
+    public VisitaController(Visita visita, boolean admin) {
+        this.visita = visita;
+        this.admin = admin;
     }
 
     public VisitaController(Visita visita) {
@@ -116,5 +129,9 @@ public class VisitaController implements ActionListener {
         vista.getDni().setText(visita.getMonitor().getDni());
         vista.getNombre().setText(visita.getMonitor().getNombre());
         vista.getApellidos().setText(visita.getMonitor().getApellidos());
+    }
+
+    public boolean isAdmin() {
+        return admin;
     }
 }

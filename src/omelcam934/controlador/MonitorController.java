@@ -11,14 +11,21 @@ import java.awt.event.ActionListener;
 
 public class MonitorController implements ActionListener {
 
-    Monitor monitor = null;
-    MonitorVista vista = null;
-    MonitorBBDD bbdd = null;
+    private Monitor monitor = null;
+    private MonitorVista vista = null;
+    private MonitorBBDD bbdd = null;
+
+    private boolean admin;
 
     public MonitorController(MonitorVista vista) {
         this();
         this.vista = vista;
 
+    }
+
+    public MonitorController(Monitor monitor, boolean admin) {
+        this.monitor = monitor;
+        this.admin = admin;
     }
 
     public MonitorController(Monitor monitor) {
@@ -34,6 +41,10 @@ public class MonitorController implements ActionListener {
         this();
         this.monitor = monitor;
         this.vista = vista;
+    }
+
+    public boolean isAdmin() {
+        return admin;
     }
 
     public Monitor getMonitor() {
@@ -69,9 +80,14 @@ public class MonitorController implements ActionListener {
                 throw new RuntimeException(e);
             }
         } else if (vista.getBorrar().equals(source)) {
-            bbdd.borrarMonitor(monitor.getId());
+            if(monitor.getVisitas().size()==0) {
+                bbdd.borrarMonitor(monitor.getId());
+                vista.getFrame().dispose();
+            }else {
+                vista.getBorrar().setText("No se puede eliminar si tiene visitas asociadas");
+            }
             //vista.close();
-            vista.getFrame().dispose();
+
         } else if (vista.getEditarBox().equals(source)) {
             if (vista.getEditarBox().isSelected()) {
                 vista.getActualizar().setText("actualizar");
